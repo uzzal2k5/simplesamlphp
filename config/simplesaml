@@ -1,24 +1,94 @@
-
 server {
- listen 80 default_server;
- listen [::]:80 default_server;
- server_name _;
- root /var/www/html/simplesamlphp/www;
- #index index.html index.htm index.nginx-debian.html index.php;
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name _;
 
- location ~ \.php$ {
-         try_files $uri =404;
-         fastcgi_split_path_info ^(.+\.php)(/.+)$;
-         fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
-         fastcgi_index index.php;
-         include fastcgi_params;
-         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-         fastcgi_param PATH_INFO $fastcgi_path_info;
-     }
- <Directory /var/www/html/simplesamlphp/www>
-     Require all granted
- </Directory>
+    root     /var/simplesamlphp/www;
+    index    index.php index.html;
 
+
+    location ~* \.php$ {
+        include snippets/fastcgi-php.conf
+        try_files $uri =404;
+        fastcgi_split_path_info ^(.+?\.php)(/.*)$;
+        fastcgi_pass     unix:/var/run/php/php7.2-fpm.sock;
+        fastcgi_param    SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+        fastcgi_param    SCRIPT_NAME      $fastcgi_script_name;
+        fastcgi_index    index.php;
+        fastcgi_intercept_errors on;
+        include          fastcgi_params;
+
+    }
+    location ~ /\.ht {
+        deny all;
+    }
+}
+#=================================
+server {
+    listen 80;
+    listen [::]:80;
+
+    root var/simplesamlphp/www;
+
+    index index.php index.html index.htm index.nginx-debian.html;
+
+    server_name _;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
 }
 
 
+
+#============================
+server {
+    listen         80 default_server;
+    listen         [::]:80 default_server;
+    server_name    _;
+    root           /var/simplesamlphp/www;
+    index          index.php index.html;
+
+  location ~* \.php$ {
+    fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+    include         fastcgi_params;
+    fastcgi_param   SCRIPT_FILENAME    $document_root$fastcgi_script_name;
+    fastcgi_param   SCRIPT_NAME        $fastcgi_script_name;
+    include snippets/fastcgi-php.conf;
+  }
+}
+#========================================
+
+
+server {
+    listen 80;
+    listen [::]:80;
+
+    root var/simplesamlphp/www;
+
+    index index.php index.html index.htm index.nginx-debian.html;
+
+    server_name _;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+}

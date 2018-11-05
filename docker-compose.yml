@@ -1,4 +1,4 @@
-version: '3.3'
+version: '2.0'
 services:
   simplesaml:
     image: simplesaml:latest
@@ -7,6 +7,6 @@ services:
     container_name: simplesaml
     hostname: simplesaml
     volumes:
-      - ${PWD}/logs:/var/log/nginx"
+      - ${PWD}/logs:/var/log
     ports:
-      - "8080:80"
+      - "80:80"

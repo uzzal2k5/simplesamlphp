@@ -1,0 +1,42 @@
+
+server {
+ listen 80 default_server;
+ listen [::]:80 default_server;
+ server_name _;
+ #root /var/www/html/simplesamlphp/www;
+ #index index.html index.htm index.nginx-debian.html index.php;
+
+ location /simplesaml/ {
+
+    # Location Access and error log files.
+    access_log /var/log/nginx/simplesaml.access.log;
+    error_log /var/log/nginx/simplesaml.error.log;
+
+    # add alias root to global simple saml install
+    alias /absolute_path/to/simplesamlphp/www/;
+
+    # set index document
+    index index.php;
+
+    location ~ ^(?<prefix>/simplesaml)(?<phpfile>.+?\.php)(?<pathinfo>/.*)?$ {
+             try_files $uri =404;
+             fastcgi_split_path_info ^(.+\.php)(/.+)$;
+             fastcgi_param SCRIPT_FILENAME $document_root$phpfile;
+             fastcgi_param PATH_INFO $pathinfo if_not_empty;
+             fastcgi_pass unix:/var/run/fcgiwrap.socket;
+             include fastcgi_params;
+
+             #fastcgi_index index.php;
+             #fastcgi_pass unix:/var/run/php5-fpm.sock;
+             #fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+             #fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+             #fastcgi_param PATH_INFO $fastcgi_path_info;
+         }
+   }
+ #<Directory /var/www/html/simplesamlphp/www>
+ #    Require all granted
+ #</Directory>
+
+}
+
+
