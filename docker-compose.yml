@@ -1,0 +1,12 @@
+version: '3.3'
+services:
+  simplesaml:
+    image: simplesaml:latest
+    #build:
+    #  dockerfile: Dockerfile
+    container_name: simplesaml
+    hostname: simplesaml
+    volumes:
+      - ${PWD}/logs:/var/log/nginx"
+    ports:
+      - "8080:80"
