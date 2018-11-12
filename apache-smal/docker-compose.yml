@@ -1,7 +1,9 @@
 version: '2'
 services:
-  ndn-box-sp:
-    image: saml:latest
+  simplesamlphp:
+    image: uzzal2k5/simplesaml:latest
+    container_name: simplesaml
+    hostname: simplesaml
     volumes:
     #- ./data/simplesamlphp-1.13.2:/var/simplesamlphp
     #- ./data/simplesamlphp-1.14.11:/var/simplesamlphp

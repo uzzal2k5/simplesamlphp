@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simplesaml-deployment
+  labels:
+    app: simplesaml
+    name: simplesaml-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simplesaml
+      name: simplesamlphp
+  template:
+    metadata:
+      labels:
+        app: simplesaml
+        name: simplesamlphp
+    spec:
+      containers:
+      - name: simplesaml
+        image: uzzal2k5/simplesaml:apache
+        ports:
+        - name: http-port
+          containerPort: 80
+      imagePullSecrets:
+      - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: simplesaml-service
+  namespace: default
+spec:
+  selector:
+    app: simplesaml
+    name: simplesamlphp
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 80
+

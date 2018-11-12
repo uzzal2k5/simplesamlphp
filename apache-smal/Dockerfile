@@ -4,7 +4,7 @@ RUN mkdir -p /var/simplesamlphp/www
 COPY apache/php-limit.ini /usr/local/etc/php/conf.d/
 COPY apache/box-sp.conf /etc/apache2/sites-available/
 RUN a2ensite box-sp && a2dissite 000-default
-ENV SP_BASENAME "https://box-idp.nordu.net"
+ENV SP_BASENAME "https://ninja"
 ENV SIMPLE_SAML_VERSION 1.16.2
 WORKDIR /opt
 ADD simplesamlphp-${SIMPLE_SAML_VERSION}.tar.gz.sha256 .
